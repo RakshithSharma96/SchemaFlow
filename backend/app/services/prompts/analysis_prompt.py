@@ -42,10 +42,8 @@ Do NOT just translate the SQL to English. Break it down using the following stri
 ### How It Works
 (Explain the core logic in a brief, cohesive paragraph. Make it sound elegant and intuitive.)
 
-### Key Operations
-- **Data Sources:** (Mention the main tables and why they are JOINed, if any)
-- **Filtering & Grouping:** (Explain any WHERE, GROUP BY, or HAVING clauses simply)
-- **Metrics Calculated:** (Highlight any aggregations like COUNT, SUM, AVG)
+### SQL Functions & Operations
+(Provide a Markdown table with two columns: `Function / Keyword` and `Meaning in this Query`. List all significant SQL operations, tables, joins, filters, and aggregations used in the query here.)
 
 IMPORTANT: Do NOT use markdown block code formatting (```) for single words, table names, or column names. 
 Only use inline backticks (`table_name`) for database identifiers. Ensure the formatting is beautiful, clean, and highly professional."""
