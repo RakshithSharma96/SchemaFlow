@@ -1,0 +1,103 @@
+"""
+Prompt Builder Service.
+Constructs structured system + user prompts for SQL generation.
+Safety instructions are embedded in every prompt — never hardcoded
+in business logic; always built through this module.
+"""
+
+from app.models.responses import SchemaInfo
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+_SAFETY_RULES = """
+STRICT SAFETY RULES (MUST FOLLOW):
+1. Generate ONLY a single SELECT SQL query. Nothing else.
+2. NEVER generate: UPDATE, DELETE, INSERT, DROP, ALTER, TRUNCATE, CREATE, MERGE, EXEC, or EXECUTE statements.
+3. NEVER generate stored procedure calls.
+4. NEVER generate multiple SQL statements (no semicolons separating statements).
+5. Do NOT include any explanation, markdown, or code fences — output raw SQL only.
+6. If the question cannot be answered with a safe read-only SELECT, respond with exactly: UNSAFE_REQUEST
+""".strip()
+
+_SYSTEM_PROMPT_TEMPLATE = """You are an expert SQL query generator for a {db_type} database.
+Your sole task is to convert natural language questions into accurate, efficient, read-only SQL queries.
+
+{safety_rules}
+
+DATABASE SCHEMA:
+{schema_text}
+
+GUIDELINES:
+- Use proper SQL syntax for {db_type}.
+- Prefer explicit column names over SELECT *.
+- Use table aliases for readability in JOINs.
+- CRITICAL: Double check your table aliases and only select columns that actually exist in the table schema. Do not hallucinate columns.
+- CRITICAL: When searching for text/names, ALWAYS use case-insensitive LIKE (e.g. `LOWER(col) LIKE '%text%'`). Do NEVER hallucinate exact IDs or reference codes unless provided by the user.
+- Apply LIMIT clauses when the question implies a bounded result set.
+- Use CTEs (WITH clauses) for complex multi-step queries.
+- Aggregate functions (COUNT, SUM, AVG, MIN, MAX) are allowed.
+- GROUP BY, HAVING, ORDER BY, and LIMIT are all supported.
+"""
+
+
+class PromptBuilder:
+    """
+    Builds system and user prompts for the SQL generation LLM call.
+    Decoupled from both the LLM provider and query execution logic.
+    """
+
+    def build(self, schema: SchemaInfo, question: str) -> tuple[str, str]:
+        """
+        Construct a (system_prompt, user_prompt) tuple.
+
+        Args:
+            schema: Extracted schema metadata for the connected database.
+            question: The user's natural language question.
+
+        Returns:
+            (system_prompt, user_prompt) ready for the LLM.
+        """
+        schema_text = self._schema_to_text(schema)
+        system_prompt = _SYSTEM_PROMPT_TEMPLATE.format(
+            db_type=schema.db_type.upper(),
+            safety_rules=_SAFETY_RULES,
+            schema_text=schema_text,
+        )
+        user_prompt = f"Question: {question}\n\nSQL Query:"
+        logger.debug(
+            "Prompt built — schema_tables=%d question_len=%d",
+            len(schema.tables), len(question),
+        )
+        return system_prompt, user_prompt
+
+
+    @staticmethod
+    def _schema_to_text(schema: SchemaInfo) -> str:
+        """
+        Convert schema metadata to a compact DDL-like text representation
+        that LLMs understand well.
+        """
+        lines: list[str] = [
+            f"Database: {schema.database_name} ({schema.db_type.upper()})",
+            "",
+        ]
+        for table in schema.tables:
+            lines.append(f"TABLE: {table.name}")
+            if table.row_count is not None:
+                lines.append(f"  (approx. {table.row_count:,} rows)")
+            for col in table.columns:
+                parts = [f"  - {col.name}: {col.data_type}"]
+                if col.primary_key:
+                    parts.append("[PK]")
+                if col.foreign_key:
+                    parts.append(f"[FK → {col.foreign_key}]")
+                if not col.nullable:
+                    parts.append("NOT NULL")
+                lines.append(" ".join(parts))
+            lines.append("")
+        return "\n".join(lines)
+
+
+# Module-level singleton
+prompt_builder = PromptBuilder()
