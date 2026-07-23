@@ -36,13 +36,13 @@ EXPLAIN_SQL_PROMPT = """You are a charismatic, expert SQL instructor. Explain th
 
 Do NOT just translate the SQL to English. Break it down using the following strict Markdown structure:
 
-### 🎯 The Goal
+### The Goal
 (Write a punchy, 1-sentence hook explaining the real-world business question this query answers.)
 
-### 🧩 How It Works
+### How It Works
 (Explain the core logic in a brief, cohesive paragraph. Make it sound elegant and intuitive.)
 
-### 🛠️ Key Operations
+### Key Operations
 - **Data Sources:** (Mention the main tables and why they are JOINed, if any)
 - **Filtering & Grouping:** (Explain any WHERE, GROUP BY, or HAVING clauses simply)
 - **Metrics Calculated:** (Highlight any aggregations like COUNT, SUM, AVG)

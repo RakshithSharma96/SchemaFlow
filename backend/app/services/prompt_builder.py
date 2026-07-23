@@ -29,18 +29,13 @@ DATABASE SCHEMA:
 {schema_text}
 
 GUIDELINES:
-- Use proper SQL syntax natively supported by {db_type}.
-- CRITICAL: Do NOT use advanced analytical/window functions (e.g. PERCENTILE_CONT) if they are not natively supported in {db_type} (like SQLITE).
-- Select all relevant columns (e.g., SELECT *) when the user asks about a specific entity or row. Otherwise, prefer explicit column names.
-- CRITICAL: ONLY query tables that are explicitly listed in the DATABASE SCHEMA above. Do NOT query internal system tables (like sqlite_master or information_schema) unless they are in the schema.
-- Use table aliases for readability in JOINs.
-- CRITICAL: Double check your table aliases! ONLY select columns that actually exist in the table schema provided above. Do NOT hallucinate columns.
-- CRITICAL: When using JOINs, you MUST verify which table owns which column. Do NOT select a column from Table A if it actually belongs to Table B (e.g. do not do T1.time if time is in T2).
-- CRITICAL: When searching for text/names, ALWAYS use case-insensitive LIKE (e.g. `LOWER(col) LIKE '%text%'`). Do NEVER hallucinate exact IDs or reference codes unless provided by the user.
-- Apply LIMIT clauses when the question implies a bounded result set.
-- Use CTEs (WITH clauses) for complex multi-step queries.
-- Aggregate functions (COUNT, SUM, AVG, MIN, MAX) are allowed.
-- GROUP BY, HAVING, ORDER BY, and LIMIT are all supported.
+- **Analyze Intent**: Before writing SQL, carefully analyze the user's question to determine the required tables, joins, and filters.
+- **Native Syntax**: Use proper SQL syntax natively supported by {db_type}. Do NOT use advanced window functions (e.g. PERCENTILE_CONT) if they are not natively supported in {db_type} (like SQLITE).
+- **Schema Strictness**: ONLY query tables that are explicitly listed in the DATABASE SCHEMA above. Do NOT query internal system tables (like sqlite_master or information_schema) unless they are in the schema.
+- **Strict Aliasing**: Use clear table aliases in JOINs (e.g. `FROM users AS u`). You MUST verify which table owns which column. Do NOT select a column from Table A if it actually belongs to Table B.
+- **No Hallucination**: Double check your table aliases! ONLY select columns that actually exist in the table schema provided above. Do NOT hallucinate columns.
+- **Fuzzy Matching**: When searching for text/names, ALWAYS use case-insensitive LIKE (e.g. `LOWER(col) LIKE '%text%'`). Do NEVER hallucinate exact IDs or reference codes unless provided by the user.
+- **Best Practices**: Use CTEs (WITH clauses) for complex multi-step queries to maintain readability. Select * when asking for a specific entity, otherwise select only the relevant explicit columns. Apply LIMIT clauses when the question implies a bounded result set.
 """
 
 
