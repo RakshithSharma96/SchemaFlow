@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     nvidia_model: str = "meta/llama-3.1-8b-instruct"
     
     openrouter_api_key: str = ""
-    openrouter_model: str = "google/gemma-4-31b-it:free"
+    openrouter_model: str = "google/gemma-4-26b-a4b-it:free"
 
     secret_key: str = ""
 
