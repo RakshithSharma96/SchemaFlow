@@ -29,27 +29,14 @@ export function ChatWindow({ messages, onExampleClick, onSuggestionClick, onExpl
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-    // Fractional pixel safe check for "at bottom"
-    const isAtBottom = scrollHeight - scrollTop - clientHeight <= 4;
     
-    // If the user reaches the absolute bottom, snap back into auto-scroll mode
-    if (isAtBottom) {
-      setAutoScroll(true);
-    }
+    // If the user scrolls up (more than 100px from bottom), disable auto-scroll.
+    // If they scroll back down to the bottom, re-enable it.
+    const isAtBottom = scrollHeight - scrollTop - clientHeight <= 100;
+    setAutoScroll(isAtBottom);
   };
 
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    // If the user actively scrolls UP with mouse wheel, break out of auto-scroll
-    if (e.deltaY < 0) {
-      setAutoScroll(false);
-    }
-  };
 
-  const handleTouchMove = () => {
-    // Any manual touch pan breaks out of auto-scroll. 
-    // They can re-engage it by scrolling to the bottom.
-    setAutoScroll(false);
-  };
 
   useEffect(() => {
     if (autoScroll) {
@@ -118,8 +105,6 @@ export function ChatWindow({ messages, onExampleClick, onSuggestionClick, onExpl
     <div 
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      onWheel={handleWheel}
-      onTouchMove={handleTouchMove}
       className="flex-1 overflow-y-auto px-4 py-8 space-y-8"
     >
       <AnimatePresence initial={false}>
