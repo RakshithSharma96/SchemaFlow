@@ -76,8 +76,8 @@ class SQLValidator:
         # Detect the LLM's explicit unsafe signal anywhere in the text
         if "UNSAFE_REQUEST" in sql.upper():
             raise SQLValidationError(
-                "The AI determined this request cannot be answered safely or is too ambiguous.",
-                detail="Try rephrasing your question to be more specific. Only read-only questions are supported.",
+                "I couldn't generate a SQL query for this request.",
+                detail="I couldn't generate a safe SQL query for this question. It might be too ambiguous, or it might require data that doesn't exist in the current database schema. Could you try rephrasing it?",
             )
 
         cleaned = self._clean(sql)

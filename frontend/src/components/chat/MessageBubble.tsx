@@ -43,8 +43,8 @@ export const MessageBubble = memo(function MessageBubble({ message, onSuggestion
       <div
         className="flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center border border-[var(--border)]"
         style={{
-          background: isUser ? 'var(--foreground)' : isError ? 'var(--destructive)' : 'var(--background)',
-          color: isUser ? 'var(--background)' : isError ? 'var(--destructive-foreground)' : 'var(--foreground)'
+          background: isUser ? 'var(--foreground)' : 'var(--background)',
+          color: isUser ? 'var(--background)' : isError ? '#f59e0b' : 'var(--foreground)'
         }}
       >
         {isUser ? <User size={16} /> : isError ? <AlertCircle size={16} /> : <Bot size={16} />}
