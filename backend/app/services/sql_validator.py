@@ -73,11 +73,11 @@ class SQLValidator:
         if not sql or not sql.strip():
             raise SQLValidationError("Empty SQL received from LLM")
 
-        # Detect the LLM's explicit unsafe signal
-        if sql.strip().upper() == "UNSAFE_REQUEST":
+        # Detect the LLM's explicit unsafe signal anywhere in the text
+        if "UNSAFE_REQUEST" in sql.upper():
             raise SQLValidationError(
-                "The LLM determined this request cannot be answered safely",
-                detail="Only read-only questions are supported.",
+                "The AI determined this request cannot be answered safely or is too ambiguous.",
+                detail="Try rephrasing your question to be more specific. Only read-only questions are supported.",
             )
 
         cleaned = self._clean(sql)
