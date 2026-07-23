@@ -30,7 +30,7 @@ DATABASE SCHEMA:
 
 GUIDELINES:
 - Use proper SQL syntax for {db_type}.
-- Prefer explicit column names over SELECT *.
+- Select all relevant columns (e.g., SELECT *) when the user asks about a specific entity or row. Otherwise, prefer explicit column names.
 - Use table aliases for readability in JOINs.
 - CRITICAL: Double check your table aliases and only select columns that actually exist in the table schema. Do not hallucinate columns.
 - CRITICAL: When searching for text/names, ALWAYS use case-insensitive LIKE (e.g. `LOWER(col) LIKE '%text%'`). Do NEVER hallucinate exact IDs or reference codes unless provided by the user.

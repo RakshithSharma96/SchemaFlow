@@ -19,7 +19,7 @@ Focus on:
 • efficiency
 • real-world implications
 
-If there are no meaningful insights, explicitly state that.
+If there are no meaningful insights (e.g. the query just returns a single row with basic identifier information like a person's name), explicitly state that there are no trends or distributions to analyze. Do NOT invent redundant generic insights like "The forename is the only value present".
 Keep answers concise.
 
 Return your analysis as a valid JSON object matching this structure EXACTLY:
