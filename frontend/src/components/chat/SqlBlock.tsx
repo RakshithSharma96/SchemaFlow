@@ -76,6 +76,11 @@ export function SqlBlock({ sql, modelUsed }: SqlBlockProps) {
       >
         {sql}
       </SyntaxHighlighter>
+      {modelUsed && (
+        <div className="absolute bottom-2 right-3 text-[9px] font-mono font-medium text-[var(--muted-foreground)] opacity-50 select-none">
+          {modelUsed}
+        </div>
+      )}
     </div>
   );
 }
