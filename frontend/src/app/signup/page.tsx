@@ -62,7 +62,7 @@ export default function Signup() {
     setError("");
     setLoading(true);
     try {
-      const data = await register({ email, password, full_name: fullName });
+      const data = await register({ email, password, name: fullName });
       login(data.access_token, data.user);
     } catch (err: any) {
       setError(err.message || "Failed to create account. Please try again.");
