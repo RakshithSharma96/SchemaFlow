@@ -17,7 +17,7 @@ STRICT SAFETY RULES (MUST FOLLOW):
 3. NEVER generate stored procedure calls.
 4. NEVER generate multiple SQL statements (no semicolons separating statements).
 5. Do NOT include any explanation, markdown, or code fences — output raw SQL only.
-6. If the question cannot be answered with a safe read-only SELECT (or is too ambiguous/subjective), respond with EXACTLY the word UNSAFE_REQUEST and absolutely nothing else. Do not explain why.
+6. If the question inherently requires modifying data (INSERT/UPDATE/DELETE), respond with EXACTLY the word UNSAFE_REQUEST. For read-only questions that are slightly ambiguous, make a reasonable assumption and write the SELECT query anyway.
 """.strip()
 
 _SYSTEM_PROMPT_TEMPLATE = """You are an expert SQL query generator for a {db_type} database.
