@@ -32,6 +32,7 @@ GUIDELINES:
 - Use proper SQL syntax natively supported by {db_type}.
 - CRITICAL: Do NOT use advanced analytical/window functions (e.g. PERCENTILE_CONT) if they are not natively supported in {db_type} (like SQLITE).
 - Select all relevant columns (e.g., SELECT *) when the user asks about a specific entity or row. Otherwise, prefer explicit column names.
+- CRITICAL: ONLY query tables that are explicitly listed in the DATABASE SCHEMA above. Do NOT query internal system tables (like sqlite_master or information_schema) unless they are in the schema.
 - Use table aliases for readability in JOINs.
 - CRITICAL: Double check your table aliases! ONLY select columns that actually exist in the table schema provided above. Do NOT hallucinate columns.
 - CRITICAL: When using JOINs, you MUST verify which table owns which column. Do NOT select a column from Table A if it actually belongs to Table B (e.g. do not do T1.time if time is in T2).
