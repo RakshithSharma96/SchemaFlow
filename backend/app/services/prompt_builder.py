@@ -33,7 +33,8 @@ GUIDELINES:
 - CRITICAL: Do NOT use advanced analytical/window functions (e.g. PERCENTILE_CONT) if they are not natively supported in {db_type} (like SQLITE).
 - Select all relevant columns (e.g., SELECT *) when the user asks about a specific entity or row. Otherwise, prefer explicit column names.
 - Use table aliases for readability in JOINs.
-- CRITICAL: Double check your table aliases and ONLY select columns that actually exist in the table schema provided above. Do NOT hallucinate columns (like driverId if it's not exactly in the schema).
+- CRITICAL: Double check your table aliases! ONLY select columns that actually exist in the table schema provided above. Do NOT hallucinate columns.
+- CRITICAL: When using JOINs, you MUST verify which table owns which column. Do NOT select a column from Table A if it actually belongs to Table B (e.g. do not do T1.time if time is in T2).
 - CRITICAL: When searching for text/names, ALWAYS use case-insensitive LIKE (e.g. `LOWER(col) LIKE '%text%'`). Do NEVER hallucinate exact IDs or reference codes unless provided by the user.
 - Apply LIMIT clauses when the question implies a bounded result set.
 - Use CTEs (WITH clauses) for complex multi-step queries.
