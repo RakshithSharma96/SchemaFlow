@@ -24,25 +24,24 @@ interface ChatWindowProps {
 export function ChatWindow({ messages, onExampleClick, onSuggestionClick, onExplainSql }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [autoScroll, setAutoScroll] = useState(true);
+  const isAutoScrollRef = useRef(true);
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
     
-    // If the user scrolls up (more than 100px from bottom), disable auto-scroll.
-    // If they scroll back down to the bottom, re-enable it.
-    const isAtBottom = scrollHeight - scrollTop - clientHeight <= 100;
-    setAutoScroll(isAtBottom);
+    // Generous 150px buffer. If the user scrolls up past this, we stop auto-scrolling.
+    const isAtBottom = scrollHeight - scrollTop - clientHeight <= 150;
+    isAutoScrollRef.current = isAtBottom;
   };
 
 
 
   useEffect(() => {
-    if (autoScroll) {
+    if (isAutoScrollRef.current) {
       bottomRef.current?.scrollIntoView({ behavior: 'auto' });
     }
-  }, [messages, autoScroll]);
+  }, [messages]);
 
   if (messages.length === 0) {
     return (
