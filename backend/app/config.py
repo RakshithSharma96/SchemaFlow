@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     nvidia_model: str = "meta/llama-3.1-8b-instruct"
     
     openrouter_api_key: str = ""
-    openrouter_model: str = "deepseek/deepseek-chat"
+    openrouter_model: str = "deepseek/deepseek-v4-flash"
 
     secret_key: str = ""
 
