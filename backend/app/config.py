@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     # ── LLM ──────────────────────────────────────────────────────────────────
     nvidia_api_key: str = ""
     nvidia_model: str = "meta/llama-3.1-8b-instruct"
+    
+    openrouter_api_key: str = ""
+    openrouter_model: str = "deepseek/deepseek-chat"
 
     secret_key: str = ""
 
