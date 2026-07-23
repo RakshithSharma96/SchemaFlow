@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     # ── LLM ──────────────────────────────────────────────────────────────────
     nvidia_api_key: str = ""
-    nvidia_model: str = "meta/llama-3.1-8b-instruct"
+    nvidia_model: str = "nvidia/nemotron-4-340b-instruct"
     
     openrouter_api_key: str = ""
     openrouter_model: str = "google/gemma-4-26b-a4b-it:free"
